@@ -124,7 +124,12 @@ body {
 }
 .pnode.focused:hover { transform: translate(-50%, -50%); }
 
-.pnode.role-grandparent, .pnode.role-grandchild { opacity: 0.85; }
+.pnode.role-grandparent,
+.pnode.role-great-grandparent,
+.pnode.role-grandchild,
+.pnode.role-great-grandchild {
+  opacity: 0.85;
+}
 .pnode.role-sibling { opacity: 0.9; }
 
 .pnode-avatar-wrap {

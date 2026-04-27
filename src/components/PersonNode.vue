@@ -18,7 +18,7 @@ function onCardClick() {
 }
 
 function roleLabel() {
-  return getRoleLabel(props.nodeInfo.role, props.person);
+  return props.nodeInfo.relationLabel || getRoleLabel(props.nodeInfo.role, props.person);
 }
 </script>
 

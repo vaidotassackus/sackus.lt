@@ -46,10 +46,14 @@ export type Role =
   | "focus"
   | "parent"
   | "grandparent"
+  | "great-grandparent"
   | "child"
   | "grandchild"
+  | "great-grandchild"
   | "spouse"
   | "sibling"
+  | "aunt-uncle"
+  | "nephew-niece"
   | "child-spouse"
   | "tree"
   | "hidden";
@@ -59,6 +63,7 @@ export interface NodePosition {
   y: number;
   visible: boolean;
   role: Role;
+  relationLabel?: string;
 }
 
 export interface FamilyRelation {
