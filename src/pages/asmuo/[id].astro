@@ -1,0 +1,224 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import people from "../../data/people.json";
+import couples from "../../data/couples.json";
+import { buildLookup } from "../../lib/familyLayout";
+import type { People, Couple, Person } from "../../types/person";
+
+export async function getStaticPaths() {
+  const ppl = people as People;
+  return Object.values(ppl).map((p) => ({
+    params: { id: p.id },
+    props: { person: p },
+  }));
+}
+
+interface Props {
+  person: Person;
+}
+
+const { person } = Astro.props;
+const ppl = people as People;
+const lookup = buildLookup(ppl, couples as Couple[]);
+const rel = lookup[person.id] ?? { parents: [], children: [], spouse: null };
+
+const dateStr = [
+  person.birth ? `* ${person.birth}` : "",
+  person.death ? `† ${person.death}` : person.birth ? "· gyv." : "",
+]
+  .filter(Boolean)
+  .join("  ");
+
+const fullName = `${person.firstName} ${person.lastName}`;
+const description = person.bio
+  ? person.bio.slice(0, 160)
+  : `${fullName}${person.birth ? ` (${person.birth}${person.death ? `–${person.death}` : ""})` : ""}`;
+
+const spouse = rel.spouse ? ppl[rel.spouse] : null;
+const parents = rel.parents.map((id) => ppl[id]).filter(Boolean);
+const children = rel.children.map((id) => ppl[id]).filter(Boolean);
+
+const couplesArr = couples as Couple[];
+const spouseCouple = spouse
+  ? couplesArr.find(
+      (c) => c.spouses.includes(person.id) && c.spouses.includes(spouse.id),
+    )
+  : null;
+const spouseDivorced = !!spouseCouple?.divorced;
+const spouseRange =
+  spouseCouple?.married && spouseCouple?.divorced
+    ? `${spouseCouple.married.slice(0, 4)}–${spouseCouple.divorced.slice(0, 4)}`
+    : spouseCouple?.married
+      ? `nuo ${spouseCouple.married.slice(0, 4)}`
+      : null;
+---
+
+<Layout
+  title={`${fullName} — Šačkų Giminės Medis`}
+  description={description}
+  ogImage={person.photo}
+>
+  <header class="header">
+    <a href="/" class="header-brand">
+      <span class="header-title">Šačkus</span>
+      <span class="header-subtitle">giminės medis</span>
+    </a>
+    <div class="header-sep"></div>
+    <a href={`/?focus=${person.id}`} class="header-btn-back">
+      ← Į medį
+    </a>
+    <div class="header-right">
+      <a href={`/?focus=${person.id}`} class="header-btn">
+        Rodyti medyje
+      </a>
+    </div>
+  </header>
+
+  <main class="profile-wrap">
+    <div class="profile-photo-wrap">
+      <div class={`profile-photo ${person.gender === "f" ? "female" : "male"}`}>
+        {
+          person.photo ? (
+            <img src={person.photo} alt={fullName} />
+          ) : (
+            person.firstName[0]
+          )
+        }
+      </div>
+    </div>
+
+    <h1 class="profile-name">{fullName}</h1>
+    {person.maidenName && <div class="profile-maiden">gim. {person.maidenName}</div>}
+    <div class="profile-dates">{dateStr}</div>
+    {person.birthPlace && <div class="profile-place">📍 {person.birthPlace}</div>}
+
+    {
+      person.bio && (
+        <section class="psec">
+          <div class="psec-title">Biografija</div>
+          <p class="pbio">{person.bio}</p>
+        </section>
+      )
+    }
+
+    <section class="psec">
+      <div class="psec-title">Duomenys</div>
+      {person.birth && (
+        <div class="pfield">
+          <span class="pfield-icon">*</span>
+          Gimė: {person.birth}{person.birthPlace ? ` · ${person.birthPlace}` : ""}
+        </div>
+      )}
+      {person.death && (
+        <div class="pfield">
+          <span class="pfield-icon">†</span>
+          Mirė: {person.death}
+        </div>
+      )}
+    </section>
+
+    {
+      (spouse || parents.length > 0 || children.length > 0) && (
+        <section class="psec">
+          <div class="psec-title">Šeima</div>
+
+          {spouse && (
+            <div style="margin-bottom: 14px;">
+              <div style="font-size: 13px; color: var(--ink-light); margin-bottom: 6px;">
+                {spouseDivorced ? "Buvęs sutuoktinis / -ė" : "Sutuoktinis / -ė"}
+                {spouseRange && (
+                  <span style="font-style: italic; margin-left: 6px;">({spouseRange})</span>
+                )}
+              </div>
+              <div class="chip-row">
+                <a href={`/asmuo/${spouse.id}`} class="fchip">
+                  <div class={`fchip-avatar ${spouse.gender === "f" ? "female" : "male"}`}>
+                    {spouse.firstName[0]}
+                  </div>
+                  <span style={`color: ${spouseDivorced ? "var(--ink-light)" : "var(--gold)"}; font-size: 12px;`}>
+                    {spouseDivorced ? "♥̸" : "♥"}
+                  </span>
+                  {spouse.firstName} {spouse.lastName}
+                </a>
+              </div>
+            </div>
+          )}
+
+          {parents.length > 0 && (
+            <div style="margin-bottom: 14px;">
+              <div style="font-size: 13px; color: var(--ink-light); margin-bottom: 6px;">Tėvai</div>
+              <div class="chip-row">
+                {parents.map((p) => (
+                  <a href={`/asmuo/${p.id}`} class="fchip">
+                    <div class={`fchip-avatar ${p.gender === "f" ? "female" : "male"}`}>
+                      {p.firstName[0]}
+                    </div>
+                    {p.firstName} {p.lastName}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {children.length > 0 && (
+            <div>
+              <div style="font-size: 13px; color: var(--ink-light); margin-bottom: 6px;">Vaikai</div>
+              <div class="chip-row">
+                {children.map((c) => (
+                  <a href={`/asmuo/${c.id}`} class="fchip">
+                    <div class={`fchip-avatar ${c.gender === "f" ? "female" : "male"}`}>
+                      {c.firstName[0]}
+                    </div>
+                    {c.firstName} {c.lastName}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
+      )
+    }
+
+    {
+      person.gallery && person.gallery.length > 0 && (
+        <section class="psec">
+          <div class="psec-title">Galerija</div>
+          <div class="gallery-grid">
+            {person.gallery.map((src) => (
+              <img src={src} alt="" />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    {
+      person.links && person.links.length > 0 && (
+        <section class="psec">
+          <div class="psec-title">Nuorodos</div>
+          {person.links.map((lk) => (
+            <a href={lk.url} class="link-row" target="_blank" rel="noopener noreferrer">
+              <span class="link-icon">↗</span>
+              {lk.label}
+            </a>
+          ))}
+        </section>
+      )
+    }
+
+    {
+      person.docs && person.docs.length > 0 && (
+        <section class="psec">
+          <div class="psec-title">Dokumentai</div>
+          {person.docs.map((d) => (
+            <div class="doc-row">
+              <span style="font-size: 18px;">📄</span>
+              <span>{d.name}</span>
+              <span class="doc-type">{d.type}</span>
+            </div>
+          ))}
+        </section>
+      )
+    }
+  </main>
+</Layout>

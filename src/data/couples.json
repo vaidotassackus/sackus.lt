@@ -1,0 +1,4 @@
+[
+  { "spouses": ["kestutis", "ilona"],  "children": ["vaidotas", "monika"] },
+  { "spouses": ["vaidotas", "donata"], "children": ["vincas"], "married": "2017", "divorced": "2020" }
+]

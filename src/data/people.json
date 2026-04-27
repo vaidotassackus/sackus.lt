@@ -1,0 +1,10 @@
+{
+  "kestutis": { "id": "kestutis", "firstName": "Kęstutis", "lastName": "Šačkus", "gender": "m", "birth": "1959-09-29", "birthPlace": "Gelgaudiškis", "x": 660, "y": 200 },
+  "ilona":    { "id": "ilona",    "firstName": "Ilona",    "lastName": "Šačkuvienė", "maidenName": "Linkevičiūtė", "gender": "f", "birth": "1959-06-14", "birthPlace": "Pasvalys",     "x": 850, "y": 200 },
+
+  "monika":   { "id": "monika",   "firstName": "Monika",   "lastName": "Šačkutė", "gender": "f", "birth": "1991-03-22", "birthPlace": "Kaunas",  "x": 470, "y": 450 },
+  "vaidotas": { "id": "vaidotas", "firstName": "Vaidotas", "lastName": "Šačkus",  "gender": "m", "birth": "1985-09-25", "birthPlace": "Kaunas",  "x": 660, "y": 450 },
+  "donata":   { "id": "donata",   "firstName": "Donata",   "lastName": "Šačkė",   "maidenName": "Meškėnaitė", "gender": "f", "birth": "1984-05-01", "birthPlace": "Panevėžys", "x": 850, "y": 450 },
+
+  "vincas":   { "id": "vincas",   "firstName": "Vincas",   "lastName": "Šačkus",  "gender": "m", "birth": "2017-08-03", "birthPlace": "Vilnius", "x": 755, "y": 700 }
+}
