@@ -45,6 +45,15 @@ const spouseCouple = spouse
     )
   : null;
 const spouseDivorced = !!spouseCouple?.divorced;
+const spouseLabel = spouse
+  ? spouseDivorced
+    ? spouse.gender === "f"
+      ? "Buvusi sutuoktinė"
+      : "Buvęs sutuoktinis"
+    : spouse.gender === "f"
+      ? "Sutuoktinė"
+      : "Sutuoktinis"
+  : "";
 const spouseRange =
   spouseCouple?.married && spouseCouple?.divorced
     ? `${spouseCouple.married.slice(0, 4)}–${spouseCouple.divorced.slice(0, 4)}`
@@ -125,7 +134,7 @@ const spouseRange =
           {spouse && (
             <div style="margin-bottom: 14px;">
               <div style="font-size: 13px; color: var(--ink-light); margin-bottom: 6px;">
-                {spouseDivorced ? "Buvęs sutuoktinis / -ė" : "Sutuoktinis / -ė"}
+                {spouseLabel}
                 {spouseRange && (
                   <span style="font-style: italic; margin-left: 6px;">({spouseRange})</span>
                 )}

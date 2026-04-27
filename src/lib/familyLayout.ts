@@ -2,6 +2,7 @@ import type {
   Couple,
   FamilyLookup,
   NodePosition,
+  Person,
   People,
   Role,
 } from "../types/person";
@@ -18,19 +19,25 @@ export const FCX = 750;
 export const FCY = 480;
 export const XGAP = 190;
 export const YGAP = 195;
+const NODE_GAP = 42;
+const SPOUSE_GAP = NODE_W + 20;
 
-export const ROLE_LABELS: Record<Role, string> = {
-  focus: "",
-  parent: "tėvas / motina",
-  grandparent: "senelis / senelė",
-  child: "vaikas",
-  grandchild: "vaikaitis",
-  spouse: "sutuoktinis/ė",
-  sibling: "brolis / sesuo",
-  "child-spouse": "sutuoktinis/ė",
-  tree: "",
-  hidden: "",
+const ROLE_LABELS_BY_GENDER: Record<Role, Record<Person["gender"], string>> = {
+  focus: { m: "", f: "" },
+  parent: { m: "tėvas", f: "motina" },
+  grandparent: { m: "senelis", f: "senelė" },
+  child: { m: "sūnus", f: "dukra" },
+  grandchild: { m: "anūkas", f: "anūkė" },
+  spouse: { m: "sutuoktinis", f: "sutuoktinė" },
+  sibling: { m: "brolis", f: "sesuo" },
+  "child-spouse": { m: "sutuoktinis", f: "sutuoktinė" },
+  tree: { m: "", f: "" },
+  hidden: { m: "", f: "" },
 };
+
+export function getRoleLabel(role: Role, person: Person): string {
+  return ROLE_LABELS_BY_GENDER[role]?.[person.gender] ?? "";
+}
 
 export function buildLookup(people: People, couples: Couple[]): FamilyLookup {
   const lu: FamilyLookup = {};
@@ -123,13 +130,27 @@ export function computeFocusLayout(
   });
 
   const children = rel.children.filter((id) => people[id]);
-  const childTotalW = (children.length - 1) * XGAP;
-  children.forEach((cid, i) => {
-    const cx = FCX - childTotalW / 2 + i * XGAP;
+  const childGroups = children.map((cid) => {
+    const crel = lu[cid] || { parents: [], children: [], spouse: null };
+    const hasSpouse = !!(crel.spouse && people[crel.spouse] && !pos[crel.spouse]);
+    return {
+      childId: cid,
+      spouseId: hasSpouse ? crel.spouse : null,
+      width: hasSpouse ? NODE_W * 2 + NODE_GAP : NODE_W,
+    };
+  });
+  const childTotalW =
+    childGroups.reduce((sum, group) => sum + group.width, 0) +
+    Math.max(0, childGroups.length - 1) * NODE_GAP;
+  let childCursor = FCX - childTotalW / 2;
+
+  childGroups.forEach((group) => {
+    const cid = group.childId;
+    const cx = childCursor + NODE_W / 2;
     place(cid, cx, FCY + YGAP, "child");
     const crel = lu[cid] || { parents: [], children: [], spouse: null };
-    if (crel.spouse && !pos[crel.spouse]) {
-      place(crel.spouse, cx + XGAP * 0.55 + 25, FCY + YGAP, "child-spouse");
+    if (group.spouseId) {
+      place(group.spouseId, cx + SPOUSE_GAP, FCY + YGAP, "child-spouse");
     }
     const grandchildren = crel.children.filter(
       (id) => people[id] && !pos[id],
@@ -142,6 +163,7 @@ export function computeFocusLayout(
         "grandchild",
       );
     });
+    childCursor += group.width + NODE_GAP;
   });
 
   return { pos, roles };

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { NodePosition, Person } from "../types/person";
-import { ROLE_LABELS } from "../lib/familyLayout";
+import { getRoleLabel } from "../lib/familyLayout";
 
 const props = defineProps<{
   person: Person;
@@ -15,6 +15,10 @@ const emit = defineEmits<{
 
 function onCardClick() {
   emit("focus", props.person.id);
+}
+
+function roleLabel() {
+  return getRoleLabel(props.nodeInfo.role, props.person);
 }
 </script>
 
@@ -67,11 +71,11 @@ function onCardClick() {
         nodeInfo.role &&
         nodeInfo.role !== 'tree' &&
         nodeInfo.role !== 'hidden' &&
-        ROLE_LABELS[nodeInfo.role]
+        roleLabel()
       "
       class="pnode-role-badge"
     >
-      {{ ROLE_LABELS[nodeInfo.role] }}
+      {{ roleLabel() }}
     </div>
   </div>
 </template>
