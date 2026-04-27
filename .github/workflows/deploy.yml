@@ -53,6 +53,7 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
 
       - name: Rsync to server
+        timeout-minutes: 3
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
@@ -61,9 +62,11 @@ jobs:
         run: |
           set -euo pipefail
           port="${SSH_PORT:-22}"
-          ssh_opts="-i ~/.ssh/id_ed25519 -p ${port} -o BatchMode=yes -o StrictHostKeyChecking=accept-new"
+          ssh_opts="-i ~/.ssh/id_ed25519 -p ${port} -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=15 -o ConnectionAttempts=2 -o ServerAliveInterval=15 -o ServerAliveCountMax=2"
+          echo "Testing SSH connection to ${SSH_USER}@${SSH_HOST}:${port}"
           ssh ${ssh_opts} "${SSH_USER}@${SSH_HOST}" "mkdir -p '${DEPLOY_PATH}'"
           rsync -avz --delete \
+            --timeout=60 \
             -e "ssh ${ssh_opts}" \
             dist/ \
             "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/"
