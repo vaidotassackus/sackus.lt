@@ -8,7 +8,7 @@ Kai bus tikri duomenys — pakeisti šiuos failus.
 
 ### `people.json`
 Žmonių žodynas (id → asmuo). Laukai:
-- `id` — unikalus, naudojamas URL'ui (`/asmuo/<id>`). Tik mažosios raidės be diakritikos
+- `id` — unikalus, naudojamas URL'ui (`/familytree/asmuo/<id>`). Tik mažosios raidės be diakritikos
 - `firstName`, `lastName` — privalomi
 - `maidenName` — moterims, jei pavardė pakito
 - `gender` — `"m"` arba `"f"`

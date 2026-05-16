@@ -102,7 +102,7 @@ onMounted(() => {
 
 <template>
   <header class="header">
-    <a href="/" class="header-brand">
+    <a href="/familytree/" class="header-brand">
       <span class="header-title">Šačkus</span>
       <span class="header-subtitle">giminės medis</span>
     </a>
@@ -140,7 +140,7 @@ onMounted(() => {
       </button>
       <a
         v-if="focusPerson"
-        :href="`/asmuo/${focusPerson.id}`"
+        :href="`/familytree/asmuo/${focusPerson.id}`"
         class="header-btn header-btn-primary"
       >
         Profilis →

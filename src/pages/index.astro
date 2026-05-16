@@ -1,17 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import FamilyTree from "../components/FamilyTree.vue";
-import people from "../data/people.json";
-import couples from "../data/couples.json";
-import generations from "../data/generations.json";
-import type { People, Couple, Generation } from "../types/person";
 ---
 
-<Layout title="Šačkus — Giminės Medis" bodyClass="tree-page">
-  <FamilyTree
-    client:load
-    people={people as People}
-    couples={couples as Couple[]}
-    generations={generations as Generation[]}
-  />
+<Layout
+  title="sackus.lt"
+  description="Privatus puslapis."
+>
+  <main class="public-home">
+    <section class="public-home-panel">
+      <div class="public-home-mark">sackus.lt</div>
+      <h1>Privatus puslapis</h1>
+      <p>Šis puslapis nėra skirtas viešai peržiūrai.</p>
+    </section>
+  </main>
 </Layout>

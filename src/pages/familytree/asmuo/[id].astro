@@ -1,9 +1,9 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import people from "../../data/people.json";
-import couples from "../../data/couples.json";
-import { buildLookup } from "../../lib/familyLayout";
-import type { People, Couple, Person } from "../../types/person";
+import Layout from "../../../layouts/Layout.astro";
+import people from "../../../data/people.json";
+import couples from "../../../data/couples.json";
+import { buildLookup } from "../../../lib/familyLayout";
+import type { People, Couple, Person } from "../../../types/person";
 
 export async function getStaticPaths() {
   const ppl = people as People;
@@ -66,18 +66,19 @@ const spouseRange =
   title={`${fullName} — Šačkų Giminės Medis`}
   description={description}
   ogImage={person.photo}
+  noindex
 >
   <header class="header">
-    <a href="/" class="header-brand">
+    <a href="/familytree/" class="header-brand">
       <span class="header-title">Šačkus</span>
       <span class="header-subtitle">giminės medis</span>
     </a>
     <div class="header-sep"></div>
-    <a href={`/?focus=${person.id}`} class="header-btn-back">
+    <a href={`/familytree/?focus=${person.id}`} class="header-btn-back">
       ← Į medį
     </a>
     <div class="header-right">
-      <a href={`/?focus=${person.id}`} class="header-btn">
+      <a href={`/familytree/?focus=${person.id}`} class="header-btn">
         Rodyti medyje
       </a>
     </div>
@@ -140,7 +141,7 @@ const spouseRange =
                 )}
               </div>
               <div class="chip-row">
-                <a href={`/asmuo/${spouse.id}`} class="fchip">
+                <a href={`/familytree/asmuo/${spouse.id}`} class="fchip">
                   <div class={`fchip-avatar ${spouse.gender === "f" ? "female" : "male"}`}>
                     {spouse.firstName[0]}
                   </div>
@@ -158,7 +159,7 @@ const spouseRange =
               <div style="font-size: 13px; color: var(--ink-light); margin-bottom: 6px;">Tėvai</div>
               <div class="chip-row">
                 {parents.map((p) => (
-                  <a href={`/asmuo/${p.id}`} class="fchip">
+                  <a href={`/familytree/asmuo/${p.id}`} class="fchip">
                     <div class={`fchip-avatar ${p.gender === "f" ? "female" : "male"}`}>
                       {p.firstName[0]}
                     </div>
@@ -174,7 +175,7 @@ const spouseRange =
               <div style="font-size: 13px; color: var(--ink-light); margin-bottom: 6px;">Vaikai</div>
               <div class="chip-row">
                 {children.map((c) => (
-                  <a href={`/asmuo/${c.id}`} class="fchip">
+                  <a href={`/familytree/asmuo/${c.id}`} class="fchip">
                     <div class={`fchip-avatar ${c.gender === "f" ? "female" : "male"}`}>
                       {c.firstName[0]}
                     </div>

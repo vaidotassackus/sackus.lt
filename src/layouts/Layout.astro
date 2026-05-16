@@ -6,6 +6,7 @@ interface Props {
   description?: string;
   bodyClass?: string;
   ogImage?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -13,6 +14,7 @@ const {
   description = "Šačkų giminės medis — kartos, vardai, atminimas.",
   bodyClass = "",
   ogImage,
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
@@ -29,6 +31,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString(
 
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow, noarchive" />}
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

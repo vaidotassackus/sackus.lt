@@ -263,3 +263,32 @@ body {
 
 .doc-row { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border: 1px solid var(--gold-light); border-radius: 4px; margin-bottom: 6px; font-size: 15px; color: var(--ink-mid); }
 .doc-type { margin-left: auto; font-size: 12px; color: var(--gold); text-transform: uppercase; }
+
+/* PUBLIC PLACEHOLDER */
+.public-home {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+}
+.public-home-panel {
+  width: min(100%, 460px);
+  text-align: center;
+}
+.public-home-mark {
+  font-family: 'Caveat', cursive;
+  font-size: 18px;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.public-home h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.public-home p {
+  font-size: 17px;
+  color: var(--ink-light);
+}

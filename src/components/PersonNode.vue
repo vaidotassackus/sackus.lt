@@ -42,7 +42,7 @@ function roleLabel() {
   >
     <div style="position: relative; width: 38px; margin: 0 auto 7px">
       <a
-        :href="`/asmuo/${person.id}`"
+        :href="`/familytree/asmuo/${person.id}`"
         :class="['pnode-avatar', person.gender === 'f' ? 'female' : 'male']"
         title="Atidaryti profilį"
         @click.stop
